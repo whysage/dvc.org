@@ -3,7 +3,7 @@
 Returns the contents of a tracked file.
 
 ```py
-def open(path: str,
+def read(path: str,
          repo: str = None,
          rev: str = None,
          remote: str = None,
@@ -74,8 +74,6 @@ These are loaded to memory directly (without using any disc space).
 - `dvc.exceptions.FileMissingError` - file in `path` is missing from `repo`.
 
 - `dvc.exceptions.PathMissingError` - `path` cannot be found in `repo`.
-
-- `dvc.api.UrlNotDvcRepoError` - `repo` is not a DVC project.
 
 - `dvc.exceptions.NoRemoteError` - no `remote` is found.
 
