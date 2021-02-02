@@ -3,6 +3,9 @@
 Download a file or directory tracked by another DVC or Git repository into the
 <abbr>workspace</abbr>, and track it (an import `.dvc` file is created).
 
+> See `dvc import-url` to download and track data from other supported locations
+> such as S3, SSH, HTTP, etc.
+
 > See also our `dvc.api.open()` Python API function.
 
 ## Synopsis
@@ -28,7 +31,7 @@ project. This makes it possible to update the import later, if the data source
 has changed (see `dvc update`).
 
 > Note that `dvc get` corresponds to the first step this command performs (just
-> download the data).
+> downloading the data).
 
 > See `dvc list` for a way to browse repository contents to find files or
 > directories to import.
@@ -53,19 +56,10 @@ tracked by either Git or DVC (including paths inside tracked directories). Note
 that DVC-tracked targets must be found in a `dvc.yaml` or `.dvc` file of the
 repo.
 
-⚠️ Source DVC repos should have a default
+⚠️ Source repos should have a default
 [DVC remote](/doc/command-reference/remote) containing the target data for this
 command to work. The only exception is for local repos, where DVC will try to
 copy the data from its <abbr>cache</abbr> first.
-
-> See `dvc import-url` to download and track data from other supported locations
-> such as S3, SSH, HTTP, etc.
-
-`.dvc` files support references to data in an external DVC repository (hosted on
-a Git server). In such a `.dvc` file, the `deps` field specifies the `url` and
-data `path`, and the `outs` field contains the corresponding local path in the
-<abbr>workspace</abbr>. It records enough metadata about the imported data to
-enable DVC efficiently determining whether the local copy is out of date.
 
 To actually [version the data](/doc/tutorials/get-started/data-versioning),
 `git add` (and `git commit`) the import `.dvc` file.
@@ -99,12 +93,11 @@ repo at `url`) are not supported.
   > [Importing and updating fixed revisions](#example-importing-and-updating-fixed-revisions)
   > example below).
 
-- `--no-exec` - create the import `.dvc` file but don't download the target data
-  (doesn't check whether the source is valid). You can use `dvc update` to
-  finish the operation. This is useful if you need to define the project imports
-  quickly, and download everything later (with `dvc update`); or if the target
-  data already exist locally and you want to "DVCfy" this state of the project
-  (see also `dvc commit`).
+- `--no-exec` - create the import `.dvc` file but don't download `url` (assumes
+  that the data source is valid). This is useful if you need to define the
+  project imports quickly, and download everything later (use `dvc update` to
+  finish the operation(s)); or if the target data already exist locally and you
+  want to "DVCfy" this state of the project (see also `dvc commit`).
 
 - `-j <number>`, `--jobs <number>` - number of threads to run simultaneously to
   handle the downloading of files from the remote. The default value is
