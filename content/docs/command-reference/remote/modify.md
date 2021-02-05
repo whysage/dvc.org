@@ -152,8 +152,16 @@ these parameters, you could use the following options.
   `access_key_id`) instead of `credentialpath`:
 
   ```dvc
-  $ dvc remote modify myremote \
-        secret_access_key 'mysecret'
+  $ dvc remote modify myremote secret_access_key 'mysecret'
+  ```
+
+- `session_token` - AWS
+  [MFA](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa.html)
+  session token. May be used (along with `access_key_id` and
+  `secret_access_key`) instead of `credentialpath` when MFA is required:
+
+  ```dvc
+  $ dvc remote modify myremote --local session_token my-session-token
   ```
 
 - `use_ssl` - whether or not to use SSL. By default, SSL is used.
@@ -293,8 +301,7 @@ $ dvc remote modify myremote endpointurl \
 - `connection_string` - connection string:
 
   ```dvc
-  $ dvc remote modify --local myremote connection_string \
-                              'mystring'
+  $ dvc remote modify --local myremote connection_string 'mystring'
   ```
 
 > The connection string contains sensitive user info. Therefore, it's safer to
@@ -334,8 +341,7 @@ a full guide on using Google Drive as DVC remote storage.
   using a custom Google Client project. Also requires using `gdrive_client_id`.
 
   ```dvc
-  $ dvc remote modify myremote \
-        gdrive_client_secret 'client-secret'
+  $ dvc remote modify myremote gdrive_client_secret 'client-secret'
   ```
 
 - `gdrive_user_credentials_file` - path where DVC stores OAuth credentials to
@@ -493,8 +499,7 @@ more information.
   [SSH format](https://tools.ietf.org/id/draft-salowey-secsh-uri-00.html#sshsyntax):
 
   ```dvc
-  $ dvc remote modify myremote url \
-                      ssh://user@example.com:1234/path
+  $ dvc remote modify myremote url ssh://user@example.com:1234/path
   ```
 
   ⚠️ DVC requires both SSH and SFTP access to work with remote SSH locations.
