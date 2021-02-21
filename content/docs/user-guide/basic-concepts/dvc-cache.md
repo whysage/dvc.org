@@ -3,7 +3,7 @@ name: 'DVC Cache'
 match: ['DVC cache', 'cache', 'caches', 'cached', 'cache directory']
 tooltip: >-
   The DVC cache is a user-hidden storage for data files that are tracked by DVC.
-  [📖](/doc/user-guide/concepts/dvc-cache)
+  [📖](/doc/user-guide/basic-concepts/dvc-cache)
 description: >-
   The DVC cache adds a layer of indirection between code and data to efficiently
   version large datasets, data science features, and machine learning models.

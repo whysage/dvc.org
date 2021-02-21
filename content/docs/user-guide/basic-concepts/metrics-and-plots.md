@@ -4,7 +4,8 @@ match: ['metrics', 'plots', 'plot metrics']
 tooltip: >-
   DVC metrics and plots provide sets of commands to follow the performance of
   machine learning experiments. Mark certain stage outputs as metrics and
-  visualize metrics as plots. [📖](/doc/user-guide/concepts/metrics-and-plots)
+  visualize metrics as plots.
+  [📖](/doc/user-guide/basic-concepts/metrics-and-plots)
 description: >-
   DVC provides sets of commands to track the performance of machine learning
   experiments. Mark certain stage outputs as metrics and visualize metrics as

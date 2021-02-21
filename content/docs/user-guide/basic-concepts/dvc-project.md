@@ -15,7 +15,7 @@ tooltip: >-
   A DVC project is a directory initialized by `dvc init` that contains a `.dvc`
   directory. It contains all <abbr>metafiles</abbr> related to project and also
   includes the underlying <abbr>cache</abbr>.
-  [📖](/doc/user-guide/concepts/dvc-project)
+  [📖](/doc/user-guide/basic-concepts/dvc-project)
 ---
 
 # DVC Project

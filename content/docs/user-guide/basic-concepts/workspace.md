@@ -4,7 +4,7 @@ match: [workspace]
 tooltip: >-
   The workspace is the _user visible_ part of the directory containing all your
   project files e.g. raw datasets, source code, ML models, etc.
-  [📖](/doc/user-guide/concepts/workspace)
+  [📖](/doc/user-guide/basic-concepts/workspace)
 description: >-
   The workspace is the directory containing all your project files e.g. raw
   datasets, source code, ML models, etc. Typically, it's also a Git repository.

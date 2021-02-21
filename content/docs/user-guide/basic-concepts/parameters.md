@@ -4,7 +4,7 @@ match: [parameter, parameters, param, params, hyperparameter, hyperparameters]
 tooltip: >-
   In DVC, parameters and hyperparameters associated with machine learning
   experiments and data science projects can be tracked as dependencies in a data
-  pipeline. [📖](/doc/user-guide/concepts/parameters)
+  pipeline. [📖](/doc/user-guide/basic-concepts/parameters)
 description: >-
   In DVC, parameters and hyperparameters associated with machine learning
   experiments and data science projects can be tracked as dependencies in a data
