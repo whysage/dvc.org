@@ -101,7 +101,7 @@ export const pageQuery = graphql`
         }
       }
       picture {
-        fluid(maxWidth: 850, quality: 90) {
+        fluid(maxWidth: 850, quality: 100) {
           ...GatsbyImageSharpFluid_withWebp
         }
       }
