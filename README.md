@@ -33,6 +33,10 @@ enabled:
 Once the codespace has been [created], you can follow the [Development
 environment] instructions from it's [Terminal].
 
+> We recommend using [VSCode](https://code.visualstudio.com/) instead of the
+> browser to open the codespace. Besides a more reliable UI, this allows you to
+> open the dev app locally.
+
 [created]:
   https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace
 [development environment]:
