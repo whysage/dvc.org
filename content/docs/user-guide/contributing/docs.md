@@ -5,9 +5,13 @@ We welcome any contributions to our documentation repository,
 the documentation content, or (rare) changes to the JS engine we use to run the
 website.
 
-Please see our
-[Writing a Blog Post guide](https://dvc.org/doc/user-guide/contributing/blog)
-for more details on how to write and submit a new blog post.
+In case of a minor change, you can use the **Edit on GitHub** button to open the
+source code page. Use thethe Edit button (pencil icon) to edit the file
+in-place, and then **Commit changes** from the bottom of the page.
+
+> Please see our
+> [Writing a Blog Post guide](https://dvc.org/doc/user-guide/contributing/blog)
+> for more details on how to write and submit a new blog post.
 
 ## Structure of the project
 
@@ -28,12 +32,6 @@ Merging the appropriate changes to these files into the master branch is enough
 to update the docs and redeploy the website.
 
 ## Submitting changes
-
-In case of a minor change, you can use the **Edit on GitHub** button (found to
-the right of each page) to fork the repository, edit it in place (with the
-source code file **Edit** button in GitHub), and create a pull request (PR).
-
-Otherwise, please refer to the following procedure:
 
 - Find or open a new issue in the
   [issue tracker](https://github.com/iterative/dvc.org/issues) to let us know
@@ -59,7 +57,7 @@ the website engine itself. Source code and content files need to be properly
 formatted and linted as well, which is also ensured by the full setup below.
 
 Make sure you have a recent LTS version of [Node.js](https://nodejs.org/en/)
-(`>=12.0.0`), and install [Yarn](https://yarnpkg.com/):
+(`>=12.0.0`, `<=15.x`), and install [Yarn](https://yarnpkg.com/):
 
 ```dvc
 $ npm install -g yarn
@@ -173,11 +171,17 @@ is installed when `yarn` runs (see [dev env](#development-environment)).
   paragraphs, but this is discouraged: try to keep items short.
 
 - Markdown: Syntax highlighting in fenced code blocks should use the `usage`
-  `dvc`, `yaml`, or `diff` custom languages. `usage` is employed to show the
-  `dvc --help` output for each command reference. `dvc` can be used to show
-  examples of commands and their output in a terminal session. `yaml` is used to
-  show samples of <abbr>DVC files</abbr>, or other YAML contents. `diff` is used
-  mainly for examples of `git diff` output.
+  `dvc`, `dvctable`, `yaml`, or `diff` custom languages.
+  - `usage` is employed to show the `dvc --help` output for each command
+    reference.
+  - `dvc` can be used to show examples of commands and their output in a
+    terminal session.
+  - `dvctable` is used for creating colored, bold, or italic table cells. (You
+    can see an [example](https://dvc.org/doc/start/experiments) of `dvctable` in
+    our "Get Started" section.)
+  - `yaml` is used to show samples of <abbr>DVC files</abbr>, or other YAML
+    contents.
+  - `diff` is used mainly for examples of `git diff` output.
 
 > Check out the `.md` source code of any command reference to get a better idea,
 > for example in

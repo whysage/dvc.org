@@ -110,8 +110,8 @@ Experiment results have been applied to your workspace.
 > ⚠️ it's important to handle interruptions or any other errors in your code for
 > DVC checkpoints to behave as expected.
 
-In this example we killed the process (with Ctrl + C) after 3 checkpoints (at 0,
-100, and 200 `i_`). The <abbr>cache</abbr> will contain those 3 versions of
+In this example we killed the process (with `[Ctrl] C`) after 3 checkpoints (at
+0, 100, and 200 `i_`). The <abbr>cache</abbr> will contain those 3 versions of
 `int.txt`.
 
 ```dvc
@@ -139,6 +139,6 @@ $ dvc exp show
 ```
 
 If we use `dvc exp run` again, the process will start from 200 (since that's
-what the workspace reflects).
+what the <abbr>workspace</abbr> reflects).
 
 See `dvc experiments` for more details on managing <abbr>experiments</abbr>.

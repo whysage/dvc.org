@@ -86,8 +86,11 @@
         "label": "Sharing Data and Model Files",
         "slug": "sharing-data-and-model-files"
       },
-      "data-registries",
-      "shared-development-server"
+      {
+        "label": "Fast and Secure Data Caching Hub",
+        "slug": "fast-data-caching-hub"
+      },
+      "data-registries"
     ]
   },
   {
@@ -100,7 +103,7 @@
       },
       {
         "slug": "project-structure",
-        "source": "user-guide/project-structure/index.md",
+        "source": "project-structure/index.md",
         "children": [
           {
             "label": "Pipelines Files (dvc.yaml)",
@@ -131,14 +134,19 @@
           "stop-tracking-data",
           "update-tracked-data",
           "add-deps-or-outs-to-a-stage",
-          "merge-conflicts"
+          "merge-conflicts",
+          "share-a-dvc-cache"
         ]
       },
       {
         "label": "Experiment Management",
         "slug": "experiment-management",
-        "source": "user-guide/experiment-management/index.md",
-        "children": ["checkpoints"]
+        "source": "experiment-management/index.md",
+        "children": [
+          "running-experiments",
+          "sharing-experiments",
+          "checkpoints"
+        ]
       },
       "setup-google-drive-remote",
       "large-dataset-optimization",
@@ -172,6 +180,11 @@
       {
         "label": "Anonymized Usage Analytics",
         "slug": "analytics"
+      },
+      {
+        "label": "Glossary",
+        "slug": "glossary",
+        "source": "basic-concepts"
       }
     ]
   },
@@ -520,32 +533,128 @@
     "source": "studio/index.md",
     "icon": "studio",
     "children": [
+      {
+        "label": "How It Works",
+        "slug": "overview"
+      },
       "get-started",
       {
-        "label": "Create and Share View",
-        "slug": "create-view"
+        "label": "User Guide",
+        "slug": "user-guide",
+        "source": "user-guide/index.md",
+        "children": [
+          {
+            "label": "Prepare Your Repositories",
+            "slug": "prepare-repositories"
+          },
+          {
+            "label": "Views",
+            "slug": "views",
+            "source": false,
+            "children": [
+              "what-is-a-view",
+              "create-view",
+              {
+                "label": "Configure View",
+                "slug": "view-settings"
+              },
+              "share-view"
+            ]
+          },
+          {
+            "label": "Explore ML Experiments",
+            "slug": "explore-experiments"
+          },
+          {
+            "label": "Visualize and Compare",
+            "slug": "visualize-experiments"
+          },
+          "run-experiments",
+          "teams",
+          "account-management",
+          "install-github-app"
+        ]
       },
-      {
-        "label": "Configure View",
-        "slug": "view-settings"
-      },
-      {
-        "label": "Visualize and Compare",
-        "slug": "visualize-experiments"
-      },
-      "run-experiments",
-      "teams"
+      "troubleshooting"
     ]
   },
   {
-    "label": "Dvclive",
+    "label": "DVCLive",
     "slug": "dvclive",
     "source": "dvclive/index.md",
     "children": [
-      "usage",
       {
-        "label": "Dvclive with DVC",
-        "slug": "dvclive-with-dvc"
+        "label": "User Guide",
+        "slug": "user-guide",
+        "source": "dvclive/user-guide/index.md",
+        "children": [
+          {
+            "slug": "quickstart",
+            "label": "Quickstart"
+          },
+          {
+            "label": "DVCLive with DVC",
+            "slug": "dvclive-with-dvc"
+          },
+          {
+            "label": "ML Frameworks",
+            "slug": "ml-frameworks",
+            "source": "dvclive/user-guide/ml-frameworks/index.md",
+            "children": [
+              {
+                "slug": "catalyst",
+                "label": "Catalyst"
+              },
+              {
+                "slug": "huggingface",
+                "label": "Hugging Face"
+              },
+              {
+                "slug": "keras",
+                "label": "Keras"
+              },
+              {
+                "slug": "lightgbm",
+                "label": "LightGBM"
+              },
+              {
+                "slug": "mmcv",
+                "label": "MMCV"
+              },
+              {
+                "slug": "pytorch",
+                "label": "PyTorch"
+              },
+              {
+                "slug": "tensorflow",
+                "label": "TensorFlow"
+              },
+              {
+                "slug": "xgboost",
+                "label": "XGBoost"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "API Reference",
+        "slug": "api-reference",
+        "source": "api-reference/index.md",
+        "children": [
+          {
+            "slug": "init",
+            "label": "init()"
+          },
+          {
+            "slug": "log",
+            "label": "log()"
+          },
+          {
+            "slug": "next_step",
+            "label": "next_step()"
+          }
+        ]
       }
     ]
   }

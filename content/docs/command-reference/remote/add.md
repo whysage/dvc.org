@@ -8,8 +8,8 @@ Add a new [data remote](/doc/command-reference/remote).
 ## Synopsis
 
 ```usage
-usage: dvc remote add [-h] [--global | --system | --project | --local] [-q | -v]
-                      [-d] [-f]
+usage: dvc remote add [-h] [--global | --system | --project | --local]
+                      [-q | -v] [-d] [-f]
                       name url
 
 positional arguments:
@@ -147,13 +147,19 @@ they're effective depends on each storage platform.
 
 ```dvc
 $ dvc remote add -d myremote azure://mycontainer/path
+$ dvc remote modify myremote account_name 'myuser'
 ```
 
-By default, DVC authenticates using an Azure
-[default credential](https://docs.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential)
-(if any). This uses certain environment variables or a signed in Microsoft
-application. To use a custom authentication method, use the parameters described
-in `dvc remote modify`.
+By default, DVC authenticates using an `account_name` and its [default
+credential] (if any), which uses environment variables (e.g. set by `az cli`) or
+a Microsoft application.
+
+[default credential]:
+  https://docs.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential
+
+To use a custom authentication method, use the parameters described in
+`dvc remote modify`. See some
+[examples](#example-some-azure-authentication-methods).
 
 </details>
 

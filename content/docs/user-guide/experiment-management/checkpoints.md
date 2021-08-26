@@ -23,6 +23,8 @@ This tutorial is going to cover how to implement checkpoints in an ML project
 using DVC. We're going to train a model to identify handwritten digits based on
 the MNIST dataset.
 
+https://youtu.be/PcDo-hCvYpw
+
 <details>
 
 ## ⚙️ Setting up the project
@@ -185,13 +187,14 @@ for i in range(1, EPOCHS+1):
 The line `torch.save(model.state_dict(), "model.pt")` updates the checkpoint
 file.
 
-The `dvclive.log(k, v)` line stores the metric _k_ with a value _v_ in plain
-text files in the _dvclive_ directory by default.
+You can read about what the line `dvclive.log(k, v)` does in the
+[`dvclive.log()`](/doc/dvclive/api-reference/log) reference.
 
-The `dvclive.next_step()` line tells DVC that it can take a snapshot of the
-entire workspace and version it with Git. It's important that with this approach
-only code with metadata is versioned in Git (as an ephemeral commit), while the
-actual model weight file will be stored in the DVC data cache.
+The [`dvclive.next_step()`](/doc/dvclive/api-reference/next_step) line tells DVC
+that it can take a snapshot of the entire workspace and version it with Git.
+It's important that with this approach only code with metadata is versioned in
+Git (as an ephemeral commit), while the actual model weight file will be stored
+in the DVC data <abbr>cache</abbr>.
 
 ## Running experiments
 
@@ -230,30 +233,32 @@ Epoch 4: acc=0.8538
 Updating lock file 'dvc.lock'
 Checkpoint experiment iteration '0911c09'.
 
-file:///Users/milecia/Repos/checkpoints-tutorial/dvclive.html
-Epoch 5: loss=0.416655033826828
-Epoch 5: acc=0.8777
-Updating lock file 'dvc.lock'
-Checkpoint experiment iteration 'd665a31'.
-
-file:///Users/milecia/Repos/checkpoints-tutorial/dvclive.html
-Epoch 6: loss=0.36601492762565613
-Epoch 6: acc=0.8943
-Updating lock file 'dvc.lock'
-Checkpoint experiment iteration '5eb4025'.
-
-file:///Users/milecia/Repos/checkpoints-tutorial/dvclive.html
-Epoch 7: loss=0.3324562609195709
-Epoch 7: acc=0.9044
-Updating lock file 'dvc.lock'
-Checkpoint experiment iteration 'd90179a'.
+...
 ```
 
-After a few epochs have completed, stop the training process with `Ctrl + C`.
+After a few epochs have completed, stop the training process with `[Ctrl] C`.
 Now it's time to take a look at the metrics we're working with.
 
 _If you don't have a number of training epochs defined and you don't terminate
 the process, the experiment will run for 100 epochs._
+
+### Caching checkpoints
+
+We can automatically push the checkpoints' code & data to your Git & DVC remotes
+while an experiment is running. To enable this, two environment variables need
+to be set:
+
+- `DVC_EXP_AUTO_PUSH`: Enable auto push (`true`, `1`, `y`, `yes`)
+- `DVC_EXP_GIT_REMOTE`: Git repository (can be a URL or a name such as `origin`,
+  `myremote`, etc.)
+
+Note that a `dvc remote default` is also needed so that the corresponding data
+can be pushed. With this configuration, `dvc exp push` will be done
+automatically after every iteration.
+
+⚠️ If either Git or DVC remotes are missing, the experiment will fail. However,
+if a checkpoint push doesn't succeed (due to rate limiting etc.) a warning will
+be printed, but the experiment will continue running as normal.
 
 ## Viewing checkpoints
 

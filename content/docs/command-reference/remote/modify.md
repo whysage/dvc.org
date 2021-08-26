@@ -9,8 +9,8 @@ Modify the configuration of a [data remote](/doc/command-reference/remote).
 ## Synopsis
 
 ```usage
-usage: dvc remote modify [-h] [--global | --system | --project | --local] [-q | -v]
-                         [-u]
+usage: dvc remote modify [-h] [--global | --system | --project | --local]
+                         [-q | -v] [-u]
                          name option [value]
 
 positional arguments:
@@ -291,7 +291,7 @@ Authentication example:
 $ dvc remote add -d myremote s3://mybucket/path
 $ export AWS_ACCESS_KEY_ID='mykey'
 $ export AWS_SECRET_ACCESS_KEY='mysecret'
-$ dvc remote push
+$ dvc push
 ```
 
 For more on the supported env vars, please see the
@@ -321,27 +321,78 @@ storage. Whether they're effective depends on each storage platform.
 
 ### Click for Microsoft Azure Blob Storage
 
-- `url` - remote location, in the `azure://<container>/<object>` format:
+- `url` (required) - remote location, in the `azure://<container>/<object>`
+  format:
 
   ```dvc
   $ dvc remote modify myremote url azure://mycontainer/path
   ```
 
-By default, DVC authenticates using an Azure
-[default credential](https://docs.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential)
-(if any). This uses certain environment variables or other auth sources. Use the
-following parameters (listed in order or precedence) to customize the
-authentication method:
+  Note that if the given container name isn't found in your account, DVC will
+  attempt to create it.
 
-1. `connection_string` is used for authentication if given (all others params
-   are ignored).
-2. If `tenant_id` and `client_id` or `client_secret` are given, Active Directory
-   (AD)
-   [service principal](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
-   auth is performed.
-3. The storage `account_name` is tried next, along with `account_key` or
-   `sas_token` (in that order). If neither key nor token is provided, DVC will
-   try to connect anonymously.
+- `account_name` - storage account name. Required for every authentication
+  method except `connection_string` (which already includes it).
+
+  ```dvc
+  $ dvc remote modify myremote account_name 'myaccount'
+  ```
+
+By default, DVC authenticates using an `account_name` and its [default
+credential] (if any), which uses environment variables (e.g. set by `az cli`) or
+a Microsoft application.
+
+[default credential]:
+  https://docs.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential
+
+<details>
+
+#### For Windows users
+
+When using default authentication, you may need to enable some of these
+exclusion parameters depending on your setup
+([details][azure-default-cred-params]):
+
+[azure-default-cred-params]:
+  https://docs.microsoft.com/en-us/python/api/azure-identity/azure.identity.defaultazurecredential?view=azure-python#parameters
+
+```dvc
+$ dvc remote modify --system myremote
+                    exclude_environment_credential true
+$ dvc remote modify --system myremote
+                    exclude_visual_studio_code_credential true
+$ dvc remote modify --system myremote
+                    exclude_shared_token_cache_credential true
+$ dvc remote modify --system myremote
+                    exclude_managed_identity_credential true
+```
+
+</details>
+
+To use a custom authentication method, you can either use this command to
+configure the appropriate auth params, use environment variables, or rely on an
+Azure config file (in that order). More details below.
+
+> See some [Azure auth examples](#example-some-azure-authentication-methods).
+
+#### Authenticate with DVC config parameters
+
+The following parameters are listed in the order they are used by DVC when
+attempting to authenticate with Azure:
+
+1. `connection_string` is used for authentication if given (`account_name` is
+   ignored).
+2. If `tenant_id` and `client_id`, `client_secret` are given, Active Directory
+   (AD) [service principal] auth is performed.
+3. DVC will next try to connect with `account_key` or `sas_token` (in this
+   order) if either are provided.
+4. If `allow_anonymous_login` is set to `True`, then DVC will try to connect
+   [anonymously].
+
+[service principal]:
+  https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal
+[anonymously]:
+  https://docs.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-configure
 
 > The authentication values below may contain sensitive user info. Therefore,
 > it's safer to use the `--local` flag so they're written to a Git-ignored
@@ -352,52 +403,55 @@ authentication method:
   (recommended).
 
   ```dvc
-  $ dvc remote modify --local myremote connection_string 'mysecret'
+  $ dvc remote modify --local
+                        myremote connection_string 'mysecret'
   ```
 
 * `tenant_id` - tenant ID for AD _service principal_ authentication (requires
   `client_id` and `client_secret` along with this):
 
   ```dvc
-  $ dvc remote modify --local myremote tenant_id 'directory-id'
+  $ dvc remote modify --local myremote tenant_id 'mytenant'
   ```
 
 * `client_id` - client ID for _service principal_ authentication (when
   `tenant_id` is set):
 
   ```dvc
-  $ dvc remote modify --local myremote client_id 'client-id'
+  $ dvc remote modify --local myremote client_id 'myclient'
   ```
 
 * `client_secret` - client Secret for _service principal_ authentication (when
   `tenant_id` is set):
 
   ```dvc
-  $ dvc remote modify --local myremote client_secret 'client-secret'
+  $ dvc remote modify --local myremote client_secret 'mysecret'
   ```
 
-- `account_name` - storage account name. May work by itself (via
-  [anonymous auth](https://docs.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-configure))
-  or along with either `account_key` or `sas_token` along with this):
+* `account_key` - storage account key:
 
   ```dvc
-  $ dvc remote modify --local myremote account_name 'myuser'
+  $ dvc remote modify --local myremote account_key 'mykey'
   ```
 
-* `account_key` - storage account key (for `account_name`):
-
-  ```dvc
-  $ dvc remote modify --local myremote account_key 'mysecret'
-  ```
-
-* `sas_token` - shared access signature token (for `account_name`):
+* `sas_token` - shared access signature token:
 
   ```dvc
   $ dvc remote modify --local myremote sas_token 'mysecret'
   ```
 
-Note that Azure remotes can also authenticate via environment variables (instead
-of `dvc remote modify`). These are tried if none of the params above are set.
+* `allow_anonymous_login` - whether to fall back to anonymous login if no other
+  auth params are given (besides `account_name`). This will only work with
+  public buckets:
+
+  ```dvc
+  $ dvc remote modify myremote allow_anonymous_login true
+  ```
+
+#### Authenticate with environment variables
+
+Azure remotes can also authenticate via env vars (instead of
+`dvc remote modify`). These are tried if none of the params above are set.
 
 For Azure connection string:
 
@@ -408,7 +462,7 @@ $ export AZURE_STORAGE_CONNECTION_STRING='mysecret'
 For account name and key/token auth:
 
 ```dvc
-$ export AZURE_STORAGE_ACCOUNT='myuser'
+$ export AZURE_STORAGE_ACCOUNT='myaccount'
 # and
 $ export AZURE_STORAGE_KEY='mysecret'
 # or
@@ -434,6 +488,15 @@ $ export AZURE_PASSWORD='mysecret'
 > See also description here for some
 > [env vars](https://docs.microsoft.com/en-us/python/api/azure-identity/azure.identity.environmentcredential)
 > available.
+
+#### Authenticate with an Azure config file
+
+As a final option (if no params or env vars are set), some of the auth methods
+can propagate from an Azure configuration file (typically managed with
+[az config](https://docs.microsoft.com/en-us/cli/azure/config)):
+`connection_string`, `account_name`, `account_key`, `sas_token` and
+`container_name`. The default directory where it will be searched for is
+`~/.azure` but this can be customized with the `AZURE_CONFIG_DIR` env var.
 
 </details>
 
@@ -500,16 +563,16 @@ a specific user. Please refer to
 [Using service accounts](https://cloud.google.com/iam/docs/service-accounts) for
 more information.
 
-- `gdrive_use_service_account` - instructs DVC to authenticate using a service
-  account instead of OAuth. Make sure that the service account has read/write
-  access (as needed) to the file structure in the remote `url`.
+- `gdrive_use_service_account` - authenticate using a service account. Make sure
+  that the service account has read/write access (as needed) to the file
+  structure in the remote `url`.
 
   ```dvc
   $ dvc remote modify myremote gdrive_use_service_account true
   ```
 
 - `gdrive_service_account_json_file_path` - path to the Google Project's service
-  account `.json` key file, when `gdrive_use_service_account` is on.
+  account `.json` key file (credentials).
 
   ```dvc
   $ dvc remote modify --local myremote \
@@ -517,14 +580,21 @@ more information.
                       path/to/file.json
   ```
 
-- `gdrive_service_account_user_email` - email of a user account to
-  [impersonate](https://developers.google.com/admin-sdk/directory/v1/guides/delegation)
-  with the service account. Optional when `gdrive_use_service_account` is on.
+- `gdrive_service_account_user_email` - the authority of a user account can be
+  [delegated] to the service account if needed.
 
   ```dvc
   $ dvc remote modify myremote \
-                      gdrive_service_account_user_email 'myemail-addr'
+                 gdrive_service_account_user_email 'myemail-addr'
   ```
+
+  ⚠️ DVC requires the following OAuth Scopes:
+
+  - `https://www.googleapis.com/auth/drive`
+  - `https://www.googleapis.com/auth/drive.appdata`
+
+[delegated]:
+  https://developers.google.com/admin-sdk/directory/v1/guides/delegation
 
 </details>
 
@@ -1025,4 +1095,43 @@ url = s3://mybucket/path
 profile = myuser
 [core]
 remote = myremote
+```
+
+## Example: Some Azure authentication methods
+
+Using a default identity (e.g. credentials set by `az cli`):
+
+```dvc
+$ dvc remote add -d myremote azure://mycontainer/object
+$ dvc remote modify myremote account_name 'myaccount'
+$ dvc push
+```
+
+> Note that this may require the `Storage Blob Data Contributor` and other roles
+> on the account.
+
+Using a `connection_string`:
+
+```dvc
+$ dvc remote add -d myremote azure://mycontainer/object
+$ dvc remote modify --local myremote connection_string 'mysecret'
+$ dvc push
+```
+
+Using `account_key`:
+
+```dvc
+$ dvc remote add -d myremote azure://mycontainer/object
+$ dvc remote modify --local myremote account_name 'myaccount'
+$ dvc remote modify --local myremote account_key 'mysecret'
+$ dvc push
+```
+
+Using `sas_token`:
+
+```dvc
+$ dvc remote add -d myremote azure://mycontainer/object
+$ dvc remote modify --local myremote account_name 'myaccount'
+$ dvc remote modify --local myremote sas_token 'mysecret'
+$ dvc push
 ```
