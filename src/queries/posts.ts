@@ -1,11 +1,12 @@
 import { useStaticQuery, graphql } from 'gatsby'
+import { IGatsbyImageData } from 'gatsby-plugin-image'
 
 import { IBlogPostData } from '../templates/blog-post'
 
 interface IResultBlogPostData {
   commentsUrl?: string
   date: string
-  pictureUrl: string | null
+  picture?: IGatsbyImageData
   title: string
   url: string
 }
@@ -20,9 +21,11 @@ export default function posts(): Array<IResultBlogPostData> {
           date
           commentsUrl
           picture {
-            resize(width: 160, height: 160, fit: COVER, cropFocus: CENTER) {
-              src
-            }
+            gatsbyImageData(
+              width: 160
+              height: 160
+              transformOptions: { fit: COVER, cropFocus: CENTER }
+            )
           }
         }
       }
@@ -31,20 +34,10 @@ export default function posts(): Array<IResultBlogPostData> {
   const nodes: Array<IBlogPostData> = allBlogPost.nodes
 
   return nodes.map(({ slug, title, date, commentsUrl, picture }) => {
-    let pictureUrl = null
-
-    if (picture) {
-      const {
-        resize: { src }
-      } = picture
-
-      pictureUrl = src
-    }
-
     return {
+      picture,
       commentsUrl,
       date,
-      pictureUrl,
       title,
       url: slug
     }
